@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: face-detector-gpu-v2
+  labels:
+    app: face-detector-gpu-v2
+    type: ai-ml-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: face-detector-gpu-v2
+      type: ai-ml-model
+  template:
+    metadata:
+      labels:
+        app: face-detector-gpu-v2
+        type: ai-ml-model
+    spec:
+      containers:
+      - name: face-detector-gpu-v2
+        image: docker-registry.vnpttiengiang.vn/face/face_detection:2.0
+        command: ["/app/http"]
+        imagePullPolicy: Always
+        env:
+            - name: YOLO_DATA_CFG
+              value: models/face-new/face.data
+            - name: YOLO_CFG_FILE
+              value: models/face-new/face.cfg
+            - name: YOLO_WEIGHTS_FILE
+              value: models/face-new/face.weights
+            - name: YOLO_DETECT_THRESHOLD
+              value: "0.5"
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: all
+        ports:
+          - containerPort: 8080
+      imagePullSecrets:
+        - name: harbor
+      nodeSelector: 
+        face: gpu

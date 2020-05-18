@@ -1,0 +1,18 @@
+version: '2.3'
+services:
+  goyolov3:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: docker-registry.vnpttiengiang.vn/face/face_detection:2.1
+    command: "/app/http"
+    environment:
+      YOLO_DATA_CFG: models/decrypt/face.data            # We can change these variable to point to another yolov model (e.g: tiny)
+      YOLO_CFG_FILE: models/decrypt/face.cfg
+      YOLO_WEIGHTS_FILE: models/decrypt/face_130_decrypt.weights
+      YOLO_DETECT_THRESHOLD: 0.5
+      RATE_REQUEST_PER_SECOND: 500
+      RATE_BURST_NUM: 1000
+    runtime: nvidia
+    ports:
+    - "8080:8080"
